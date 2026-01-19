@@ -1,5 +1,10 @@
 # TLS in Kubernetes
 
+### Certificate Authority (CA) Certificate for Kubernetes
+
+- ca.crt
+- ca.key
+
 ## Server Certificates for Kubernetes server components
 
 - kubeapi-server
@@ -16,14 +21,9 @@
 - kube-api server to kubelet
 - kubelet to kube-api server
 
-## Certificate Authority (CA)
-
-- ca.crt
-- ca.key
-
 ## Lab: Create Certificates in Kubernetes using `openssl`
 
-### Create private key and certificate for Kubernetes Certificate Authority (CA)
+### Create private key and certificate for Kubernetes `Certificate Authority (CA)`
 
 ```
 # Step-01: Generate private key

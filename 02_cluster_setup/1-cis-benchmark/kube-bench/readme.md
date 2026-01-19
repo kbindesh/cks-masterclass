@@ -1,19 +1,19 @@
 # kube-bench - Kubernetes CIS Benchmarking Tool
 
-## What is kube-bench?
+## 01. What is kube-bench?
 
 - Kube-bench is a tool developed by _Aqua Security_, written in _GoLang_ that runs checks against the Center for Internet Security (CIS) Kubernetes Benchmark.
 - The K8s CIS Benchmark is a set of security best practices for hardening Kubernetes clusters.
 
-## References
+## 02. Reference
 
 - GitHub Repository - https://github.com/aquasecurity/kube-bench
-- CIS Benchmark for Kubernetes - https://www.cisecurity.org/cis-benchmarks >> **Server Softwares** >> **Kubernetes**
+- CIS Benchmark for Kubernetes - https://www.cisecurity.org/benchmark/kubernetes
 - kube-bench Releases - https://github.com/aquasecurity/kube-bench/releases
 
-## Lab: Run CIS Benchmark Assessment on Kubernetes cluster using kube-bench
+## 03. Lab: Run CIS Benchmark Assessment on Kubernetes cluster using kube-bench
 
-### Run kube-bench as a CLI utility
+### 3.1 Setup `kube-bench` as a CLI utility
 
 #### Step-01: Connect to your control plane (master) node and create a new directory, say /opt/kube-bench
 
@@ -58,7 +58,7 @@ kube-bench run master -v 3 --benchmark cis-1.11 --config-dir cfg/
 [The output will include detailed information about changes and potentially extensive debugging information along with the test results. The default output includes information logs, test results (PASS, FAIL, WARN, INFO), and remediations. ]
 ```
 
-### Running kube-bench on Kubernetes as a Pod (Job)
+### 3.2 Running kube-bench on Kubernetes as a Pod (Job)
 
 #### Step-01: Apply the kubernetes job for kube-bench
 
@@ -90,7 +90,7 @@ kubectl logs <KUBE_BENCH_POD_NAME>
 kubectl logs <KUBE_BENCH_POD_NAME> > kube-bench.report
 ```
 
-## kube-bench - Common Errors
+## 3.3 kube-bench - Common Errors
 
 - **Error Message**
 
@@ -100,7 +100,7 @@ unable to determine benchmark version: config file is missing 'version_mapping' 
 
 - **Description**: If you run the kube-bench command without providing the **--config-dir** and **--config** options, you will get the above error. So make sure you pass the values for both the parameters.
 
-## Run the kube-bench with a particular cfg and k8s version
+## 3.X Run the kube-bench with a particular cfg and k8s version
 
 ```
 template:
@@ -111,3 +111,5 @@ template:
         image: aquasec/kube-bench:latest
         command: ["kube-bench", "run", "--config-dir", "/etc/kube-bench/cfg", "--config", "/etc/kube-bench/cfg/config.yaml", "--version", "1.29"]
 ```
+
+## 04. Lab: Use CIS benchmark to review the security configuration of Kubernetes components (etcd, kubelet, kubedns, kubeapi)
