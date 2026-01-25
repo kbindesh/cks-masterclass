@@ -6,9 +6,10 @@
 
 - In this lab, you will learn how to provide a new User access to Kubernetes cluster using TLS-based Authentication and elevate access levels using RBAC.
   - We will create TLS Certificate for a Developer
-  - Assign system:masters role to the user
+  - Create a kubernetes _Role_ and a _roleBinding_ object for developers (group of users)
+  - Assign a custom role (developers) to the user
   - Update the kubeconfig file with new user details
-  - Access the kubernetes cluster as a cluster admin (custom user)
+  - Access the kubernetes cluster as a developer (custom user) and verify his access.
 
 ### Step-02: Prerequisites
 
