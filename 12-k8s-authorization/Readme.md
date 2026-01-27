@@ -1,6 +1,6 @@
 # Kubernetes Authorization
 
-## Lab: Onboard a new User using TLS Certificates-based authentication and Authorization using RBAC
+## Hands-on Lab: Onboard a new User using TLS Certificates-based authentication and Authorization using RBAC
 
 ### Step-01: Lab Overview
 
