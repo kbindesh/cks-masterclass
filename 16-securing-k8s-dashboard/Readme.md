@@ -23,9 +23,9 @@ helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
 ```
 
-### Step 2: Create an Administrative Service Account
+### Step 2: Create a Service Account for K8s Dashboard Pod (with administrative access)
 
-- create a new _Service Account_ with the name _admin-user_ in namespace kubernetes-dashboard
+- create a new `Service Account` with the name _admin-user_ in namespace kubernetes-dashboard
 
 ```
 apiVersion: v1
@@ -35,7 +35,7 @@ metadata:
   namespace: kubernetes-dashboard
 ```
 
-- Creating a ClusterRoleBinding
+- Create a `ClusterRoleBinding`
 
 ```
 apiVersion: rbac.authorization.k8s.io/v1
@@ -52,7 +52,7 @@ subjects:
   namespace: kubernetes-dashboard
 ```
 
-- Get a Bearer Token for the above created ServiceAccount
+- `Create a Bearer Token` for the above created ServiceAccount
 
 ```
 kubectl -n kubernetes-dashboard create token admin-user
