@@ -41,10 +41,6 @@ openssl x509 -in admin.crt -text -noout
 
 ### Generate TLS Certificate for kube-api-server
 
-```
-
-```
-
 ## 02. Generate TLS Certificates for K8s `Client` components
 
 ### kube-scheduler

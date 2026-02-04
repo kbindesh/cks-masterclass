@@ -37,3 +37,27 @@ openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
 ```
 
 ### Create private key and certificate for Kubernetes Certificate Authority (CA)
+
+## Certificate expiry and management
+
+- `Important Note`: kubeadm cannot manage certificates signed by an external CA.
+
+```
+# Use the check-expiration subcommand to check when certificates expire
+kubeadm certs check-expiration
+```
+
+## Automatic certificate renewal
+
+- kubeadm renews all the certificates during control plane upgrade
+- For more complex requirements with respect to certificate renewal, you can opt out from the default behavior by passing **--certificate-renewal=false** to _kubeadm upgrade apply_ or to _kubeadm upgrade node_
+
+## Manual certificate renewal
+
+### Renew certificates with the Kubernetes certificates API
+
+### Renew certificates with external CA
+
+## References
+
+- https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/

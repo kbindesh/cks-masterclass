@@ -37,21 +37,31 @@
 
 ## 02. Viewing `API Groups` & `API Resources`
 
+- Prerequisite
+  - **[A User](../05-k8s-authentication/readme.md)** (e.g. devuser): TLS Certificate, Private Key and CACertificate
+  - **kube-apiserver endpoint**: (run _kubectl cluster-info_ or _kubectl config view_ to the server endpoint)
+    - In the following commands, https://10.0.0.10:6443 is the kube-apiserver endpoint
+
 ```
-# List all the K8s API Resources, associated groups & verbs
+# List all the K8s API Resources, associated groups & verbs using kubectl
 kubectl api-resources -o wide
 
 # List API Groups
-sudo curl https://10.0.0.10:6443 -k --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt --key /etc/kubernetes/pki/apiserver-kubelet-client.key --cacert /etc/kubernetes/pki/ca.crt
+sudo curl https://10.0.0.10:6443 --cert devuser.crt --key devuser.key --cacert /etc/kubernetes/pki/ca.crt
 
 # List all the API Resources with core API v1
-sudo curl https://10.0.0.10:6443/api/v1 -k --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt --key /etc/kubernetes/pki/apiserver-kubelet-client.key --cacert /etc/kubernetes/pki/ca.crt
+sudo curl https://10.0.0.10:6443/api/v1 --cert devuser.crt --key devuser.key --cacert /etc/kubernetes/pki/ca.crt
 
-# List Pods
+# List pods
+sudo curl https://10.0.0.10:6443/api/v1/pods --cert devuser.crt --key devuser.key --cacert /etc/kubernetes/pki/ca.crt
+
+
+# List API Groups directly from the node (kubelet)
+sudo curl https://10.0.0.10:6443 -k --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt --key /etc/kubernetes/pki/apiserver-kubelet-client.key --cacert /etc/kubernetes/pki/ca.crt
+
+# List Pods directly from the node (kubelet)
 sudo curl https://10.0.0.10:6443/api/v1/pods --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt --key /etc/kubernetes/pki/apiserver-kubelet-client.key --cacert /etc/kubernetes/pki/ca.crt
 
-# List Deployments
-sudo curl https://10.0.0.10:6443/apis/apps/v1/deployments --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt --key /etc/kubernetes/pki/apiserver-kubelet-client.key --cacert /etc/kubernetes/pki/ca.crt
 ```
 
 ## 03. API Groups
