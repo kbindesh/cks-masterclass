@@ -1,12 +1,12 @@
 # Securing Kubernetes Dashboard
 
-- `Important`
+- `IMPORTANT`
   - The official Kubernetes Dashboard project is archived and no longer actively maintained due to a lack of contributors. It has been moved to a "retired" repository.
   - **Reference**: https://github.com/kubernetes-retired/dashboard/blob/master/README.md
   - **Status**: Archived/Retired (as of 30 Jan 2026)
   - **Replacement**: Headlamp (https://headlamp.dev/) is the recommended open-source replacement
 
-### Step 1: Deploy the Kubernetes Dashboard
+### Step-01: Deploy the Kubernetes Dashboard
 
 - **Using K8s manifests**
 
@@ -23,7 +23,7 @@ helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
 ```
 
-### Step 2: Create a Service Account for K8s Dashboard Pod (with administrative access)
+### Step-02: Create a Service Account for K8s Dashboard Pod (with administrative access)
 
 - create a new `Service Account` with the name _admin-user_ in namespace kubernetes-dashboard
 
@@ -73,7 +73,7 @@ metadata:
 type: kubernetes.io/service-account-token
 ```
 
-### Step 3: Retrieve the Access Token
+### Step-03: Retrieve the Access Token
 
 - After Secret is created, you may execute the following command to get the token which is saved in the Secret:
 
@@ -81,10 +81,12 @@ type: kubernetes.io/service-account-token
 kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath="{.data.token}" | base64 -d
 ```
 
-### Step 4: Access the Dashboard UI using kubectl proxy
+### Step-04: Access the Dashboard UI using kubectl proxy
 
 ```
 kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard 8443:443
 ```
 
-### Step 5: Log in
+### Step-05: Log in
+
+- Hit the Kubernetes dashboard URL and enter the bearer token in order to login and securely access the Dashboard.

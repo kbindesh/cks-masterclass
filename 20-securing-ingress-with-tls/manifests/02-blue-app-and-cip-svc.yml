@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: flask-app
+  name: blue-app-deployment
+  labels:
+    app.kubernetes.io/name: flask-app-blue
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: flask-app-blue
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: flask-app-blue
+        app.kubernetes.io/version: 1.0.0
+    spec:
+      containers:
+        - name: flask-blue-c
+          image: kbindesh/flask-app-blue:1.0.0
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: 500M
+          ports:
+            - name: http
+              containerPort: 8111
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8111
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: 8111
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+  replicas: 1
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: flask-app
+  name: blue-app-cip-svc
+  labels:
+    app.kubernetes.io/name: flask-app-blue
+spec:
+  selector:
+    app.kubernetes.io/name: flask-app-blue
+  ports:
+    - port: 8111
+      name: http # optional, to be used for accessing through kubectl proxy

@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: flask-app
+  name: flask-app-ingress
+  labels:
+    app.kubernetes.io/name: flask-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "8"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "8"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "8"
+spec:
+  ingressClassName: nginx
+  tls:
+    - secretName: api-flaskapp-local-cert
+      hosts:
+        - api.flaskapp.local
+  rules:
+    - http:
+        paths:
+          - path: /api/blue
+            pathType: Prefix
+            backend:
+              service:
+                name: blue-app-cip-svc
+                port:
+                  number: 8111
+          - path: /api/yellow
+            pathType: Prefix
+            backend:
+              service:
+                name: yellow-app-cip-svc
+                port:
+                  number: 8112
