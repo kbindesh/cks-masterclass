@@ -1,4 +1,4 @@
-## NGINX Ingress on K8s (kubeadm) and Access Application over TLS
+## Configure NGINX Ingress on K8s (kubeadm) and Access Application over TLS
 
 This section demonstrate the following concepts:
 
