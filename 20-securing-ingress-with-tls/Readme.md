@@ -89,5 +89,8 @@ kubectl get ing
 - Official nginx-ingress GitHub Repository
   - https://github.com/kubernetes/ingress-nginx
 
-- nginx-ingress Deployment manifests
+- **nginx-ingress** Deployment manifests
   - https://github.com/kubernetes/ingress-nginx/tree/main/deploy/static/provider
+
+- **nginx-ingress** Baremetal Deployment manifest
+  - https://github.com/kubernetes/ingress-nginx/blob/main/deploy/static/provider/baremetal/deploy.yaml
