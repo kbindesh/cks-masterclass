@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-policy-with-ipblock
+  namespace: default
+spec:
+  # Applies the policy to pods with the label "role: db"
+  podSelector:
+    matchLabels:
+      role: db
+  # Specifies that this policy applies to both ingress and egress traffic
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allows incoming traffic from specified IP blocks
+    - from:
+        - ipBlock:
+            cidr: 10.0.0.0/24
+            # Explicitly excludes this specific IP from the allowed range
+            except:
+              - 10.0.0.50/32
+      ports:
+        # Applies the rule to TCP port 6379
+        - protocol: TCP
+          port: 6379
+  egress:
+    # Allows outgoing traffic to specified IP blocks
+    - to:
+        - ipBlock:
+            cidr: 172.16.1.0/24
+      ports:
+        # Applies the rule to TCP port 5978
+        - protocol: TCP
+          port: 5978

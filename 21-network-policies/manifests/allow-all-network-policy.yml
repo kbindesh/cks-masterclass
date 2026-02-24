@@ -1,0 +1,14 @@
+# To allow all traffic, you don't actually need a specific Network Policy,
+# because by default, all pods can communicate with each other and external networks
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-ingress
+  namespace: default # Replace with your namespace name
+spec:
+  podSelector: {} # An empty podSelector selects all pods in the namespace
+  policyTypes:
+    - Ingress
+  ingress:
+    - {} # An empty ingress rule matches all incoming traffic
