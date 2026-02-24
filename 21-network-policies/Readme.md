@@ -45,7 +45,7 @@
 
   - **Amazon VPC CNI**: The AWS-specific CNI now supports Kubernetes Network Policies in recent versions (v1.14.0 and later) when the network policy controller is enabled.
 
-## Hands-on: Demonstrating
+## Hands-on: Create Network Policies for restricting access for Pods
 
 ### Prerequisites
 
@@ -141,6 +141,15 @@ For sample manifests, kindly refer [network-policy-with-ipblock.yml](manifests/n
   - Network policies rely heavily on object _labels_ for selecting pods and namespaces.
   - Well-planned labeling is key to managing policies efficiently.
 
-## Sample Network Policies
+## Troubleshooting Network Policies
 
-- https://network-policy-api.sigs.k8s.io/reference/examples/
+6. Troubleshooting Network Policies
+
+- **Check Network Plugin**
+  - Ensure your CNI plugin supports Network Policies.
+- **Pod Labels**
+  - Verify that pod _labels_ match the _selectors_ in your Network Policy.
+- **Policy Types**
+  - Ensure you've specified the correct policy types (Ingress, Egress).
+- **Logs and Events**
+  - Check the logs and events for errors related to Network Policies.
