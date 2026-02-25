@@ -1,5 +1,121 @@
 # Kubernetes Authorization
 
+## Authorization Modes
+
+1. **AllowsAllow**
+   - This mode allows all the requests.
+   - You must use this authorization mode only if you do not require authorization for your API requests (for example, while testing)
+2. **AlwaysDeny**
+   - This mode blocks all requests.
+   - You must use this authorization mode only for testing.
+
+3. **ABAC (attribute-based access control)**
+
+4. **RBAC (role-based access control)**
+   - Uses the _rbac.authorization.k8s.io_ API group to drive authorization decisions.
+   - RBAC regulates access to the K8s API and cluster resources based on the roles assigned to users, groups, or service accounts.
+   - _Core RBAC API Resources_: _Role_, _ClusterRole_, _RoleBinding_, _ClusterRoleBinding_.
+
+5. **Node Authorization**
+   - It grants permissions to kubelets based on the pods they are scheduled to run.
+
+6. **Webhook**
+
+## RBAC - Built-in Resources
+
+### Key Built-in Groups
+
+- **system:masters**
+  - The most powerful group. Members bypass all RBAC/webhook authorization checks and have full cluster-admin rights, often used in emergency scenarios.
+- **system:authenticated**
+  - Automatically includes any user that successfully authenticates with the cluster.
+- **system:unauthenticated**
+  - Represents any request that cannot be authenticated.
+- **system:nodes**
+  - Used by kubelets to authenticate and gain permission to access specific node-related resources.
+- **system:serviceaccounts**
+  - Includes all service accounts created in the cluster.
+
+### Commonly used K8s System Roles
+
+- **cluster-admin**
+  - Superuser role, often bound to system:masters.
+- **admin**
+  - Administrator role within a namespace.
+- **edit**
+  - Allows read/write access to most resources.
+- **view**
+  - Allows read-only access.
+
+## How to Check the Status of the API Server?
+
+```
+kubectl get pods -n kube-system | grep kube-apiserver
+
+kubectl describe pod kube-apiserver-controlplane -n kube-system
+
+# For crictl (used by containerd and CRI-O)
+sudo crictl ps -a | grep kube-apiserver
+```
+
+## How to configure Kubernetes Authorization method?
+
+- To update the **--authorization-mode** flag of the kube-apiserver, you need to modify its configuration file, typically a static Pod manifest located at **/etc/kubernetes/manifests/kube-apiserver.yaml** on the control plane node.
+
+### Step-XX: Connect to the Kubernetes control plane node(s) with administrative privileges over SSH
+
+### Step-XX: Back up the configuration file
+
+- Before making any changes, create a backup of the existing manifest file:
+
+```
+sudo cp /etc/kubernetes/manifests/kube-apiserver.yaml /etc/kubernetes/manifests/kube-apiserver.yaml.backup
+```
+
+### Edit the kube-apiserver manifest
+
+- Open the **/etc/kubernetes/manifests/kube-apiserver.yaml** file in a text editor (nano/vi):
+
+```
+sudo vi /etc/kubernetes/manifests/kube-apiserver.yaml
+
+```
+
+### Step-XX: Modify the `--authorization-mode` flag of kube-apiserver
+
+- Locate the `command:` section within the YAML file.
+- Find the line that starts with `- --authorization-mode=` and modify the value to your desired comma-separated list of authorization modes (e.g., Node,RBAC).
+- The order matters
+  - The API server stops at the first _allow_ or _deny_ decision.
+
+### Step-XX: Monitor the changes
+
+- The Kubelet on the host monitors this directory. 
+- It will automatically detect the change, terminate the existing kube-apiserver Pod, and start a new one with the updated configuration.
+
+```
+# To monitor the Pod cycle
+watch crictl ps -a
+
+
+# If using docker as a container runtime
+watch docker ps -a
+
+```
+### Verify the new `kube-apiserver` configuration
+
+- After the new Pod is running, verify that the *kube-apiserver* process is using the new authorization mode value:
+
+```
+# Find the process ID of the new kube-apiserver
+ps aux | grep kube-apiserver | grep authorization-mode
+
+
+# Alternatively, you can check the logs of the new pod
+kubectl get pods -n kube-system -l component=kube-apiserver
+kubectl logs <new-apiserver-pod-name> -n kube-system
+```
+
 ## Hands-on Lab: Onboard a new User using TLS Certificates-based authentication and Authorization using RBAC
 
 ### Step-01: Lab Overview
