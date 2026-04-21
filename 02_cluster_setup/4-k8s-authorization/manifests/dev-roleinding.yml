@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rolebinding-to-dev-group # Name of the RoleBinding resource
+  namespace: development # Namespace where this binding is effective
+subjects:
+  - kind: Group
+    name: developers # Name of your group (as recognized by your auth provider)
+    apiGroup: rbac.authorization.k8s.io # Required for Group subjects
+roleRef:
+  kind: Role # The type of role being referenced (can be 'Role' or 'ClusterRole')
+  name: developers-role # Name of the Role or ClusterRole to bind
+  apiGroup: rbac.authorization.k8s.io # API group the role belongs to

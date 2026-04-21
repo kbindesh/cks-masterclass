@@ -49,10 +49,58 @@ openssl x509 -req -in $USER_NAME.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/
 openssl x509 -in $USER_NAME.crt -text -noout
 ```
 
-### Step-XX: Create a new Kubernetes Role for Developers
+### Step-06: Create a new Kubernetes `Role` for Developers
 
-### Step-XX: Create a new Kubernetes RoleBinding for Developers Role
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developers-role
+  namespace: development
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create", "update", "delete"]
+```
 
-### Step-XX: Update the kubeconfig file with new User (developer) details
+### Step-07: Create a new Kubernetes `roleBinding` for Developers Role
 
-### Step-XX: Verify User's access to Kubernetes and access levels
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rolebinding-to-dev-group # Name of the RoleBinding resource
+  namespace: development # Namespace where this binding is effective
+subjects:
+  - kind: Group
+    name: developers # Name of your group (as recognized by your auth provider)
+    apiGroup: rbac.authorization.k8s.io # Required for Group subjects
+roleRef:
+  kind: Role # The type of role being referenced (can be 'Role' or 'ClusterRole')
+  name: developers-role # Name of the Role or ClusterRole to bind
+  apiGroup: rbac.authorization.k8s.io # API group the role belongs to
+```
+
+### Step-08: Update the kubeconfig file with new User (developer) details
+
+```
+# Configure the rbac-labuser User in Kubeconfig
+kubectl config set-credentials $USER_NAME --client-certificate=$USER_NAME.crt --client-key=$USER_NAME.key --embed-certs=true
+
+# Create a new context for the rbac-labuser user
+kubectl config set-context $USER_NAME-context --cluster=kubernetes --user=$USER_NAME --namespace=default
+
+# Switch to a particular context and test
+kubectl config use-context $USER_NAME-context
+kubectl auth whoami
+```
+
+### Step-09: Verify User's access to Kubernetes and access levels
+
+```
+kubectl auth can-i update pod -n development
+
+kubectl auth can-i delete pod -n development
+
+kubectl auth can-i get pod -n development
+```
