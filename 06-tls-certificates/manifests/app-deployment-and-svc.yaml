@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app01
+  name: app01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app01
+  template:
+    metadata:
+      labels:
+        app: app01
+    spec:
+      restartPolicy: Always
+      volumes:
+      - name: app01-tls
+        secret:
+          secretName: app01-tls-cert-secret
+      containers:
+      - name: app01
+        image: us-docker.pkg.dev/google-samples/containers/gke/hello-app-tls:1.0
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+          - name: app01-tls
+            mountPath: /etc/tls
+            readOnly: true
+        env:
+          - name: TLS_CERT
+            value: /etc/tls/tls.crt
+          - name: TLS_KEY
+            value: /etc/tls/tls.key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app01
+  name: app01
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: app01
+  type: ClusterIP

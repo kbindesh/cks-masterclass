@@ -1,6 +1,6 @@
 # System Hardening
 
-In this section, we will learn the following concepts:
+In this section, you will learn the following concepts:
 
 - Confine access to the Nodes
 - SSH Hardening
