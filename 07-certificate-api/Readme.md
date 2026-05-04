@@ -1,4 +1,4 @@
-# Kubernetes TLS Certificates and Certificate Signing Requests (CSR)
+# 07. Kubernetes TLS Certificates and Certificate Signing Requests (CSR)
 
 In this section, you will learn how Kubernetes Certificates API works. It covers the following concepts:
 
@@ -8,7 +8,7 @@ In this section, you will learn how Kubernetes Certificates API works. It covers
 - Approve/Reject CSR request
 - Share the Signed certificate with users
 
-## 01. Key Concepts
+## 7.1: Key Concepts
 
 - In a K8s cluster, a Certificate Signing Request (CSR) is typically created by a user or service account who needs a client certificate to authenticate to the cluster.
 - The creation process is usually handled programmatically by a controller or a command-line tool, rather than being manually created by an admin.
@@ -21,14 +21,14 @@ In this section, you will learn how Kubernetes Certificates API works. It covers
   - **Cluster Administrators**
     - While administrators can manually create a CSR (often for bootstrapping or troubleshooting), the normal operational flow is designed for automated systems or end-users with limited privileges to initiate the request, which is then reviewed and approved by an authorized signer.
 
-### Who can approve the CSR?
+### 7.1.1: Who can approve the CSR?
 
 - **Cluster Administrators**
   - The primary approvers, using kubectl commands to manually review and sign (or deny) CSRs.
 - **Automated Controllers**
   - For scale, custom controllers (like the Kubelet CSR Approver) can automatically approve CSRs that pass configured checks, often integrating with the core controller manager.
 
-### How CSR Approval works?
+### 7.1.2: How CSR Approval works?
 
 1. **Request** - A component (like a Kubelet or user) creates a CertificateSigningRequest (CSR) object.
 2. **Pending** - The CSR enters a Pending state, waiting for approval.
@@ -48,9 +48,9 @@ In this section, you will learn how Kubernetes Certificates API works. It covers
 - **Usage Limitations**
   - The certificate's validity is controlled by the **signerName** and the **--cluster-signing-duration** flag on the _kube-controller-manager_.
 
-## 02. Hands-on Lab: Onboard a new user on K8s cluster using TLS Certificate based authN and approve the CSR using `Certificates API`
+## 7.2: Hands-on Lab: Onboard a new user on K8s cluster using TLS Certificate based authN and approve the CSR using `Certificates API`
 
-### Step-01: Generate private key for a User
+### Step-7.2.1: Generate private key for a User
 
 ```
 USER_NAME="user"
@@ -58,17 +58,17 @@ USER_NAME="user"
 openssl genrsa -out $USER_NAME.key 2048
 ```
 
-### Step-02: Create a Certificate Signing Request (CSR) object
+### Step-7.2.2: Create a Certificate Signing Request (CSR) object
 
 ```
 openssl req -new -key $USER_NAME.key -out $USER_NAME.csr -subj "/CN=user@binorg.com"
 ```
 
-### Step-03: User sends the CSR to the K8s Administrator
+### Step-7.2.3: User sends the CSR to the K8s Administrator
 
 The user sends the CSR to the administrator who will be responsible for approving/denying the request and signing the certificate.
 
-### Step-04: Create a CertificateSigningRequest object
+### Step-7.2.4: Create a CertificateSigningRequest object
 
 - The administrator creates a CertificateSigningRequest object in Kubernetes using a YAML manifest file that includes the details of the user's CSR.
 
@@ -102,7 +102,7 @@ spec:
 kubectl create -f user-csr.yaml
 ```
 
-### Step-05: Approve or Reject the CSR
+### Step-7.2.5: Approve or Reject the CSR
 
 ```
 # Get the list of CSR
@@ -117,7 +117,7 @@ kubectl certificate approve user-csr
 kubectl certificate deny user-csr
 ```
 
-### Step-06: Share the signed certificate to the User
+### Step-7.2.6: Share the signed certificate to the User
 
 ```
 # Extract the signed certificate
@@ -132,7 +132,7 @@ openssl x509 -in $USER_NAME.crt -text -noout
 - The administrator provides the signed certificate to the user.
 - With the signed certificate, the user can now use it to authenticate to the K8s cluster.
 
-## 03. Reference
+## 7.3. Reference
 
 - Certificates and Certificate Signing Requests
   - https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/
